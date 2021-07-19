@@ -14,7 +14,7 @@
 * [SubDomain-Portscan-Dirscan](https://github.com/inbug-team/InCloud/tree/SubDomain-Portscan-Dirscan) 对域名进行子域名枚举与接口查询，对查询的子域名进行Top1000端口扫描，输出可用Web服务标题，对Web服务进行Ffuf目录递归扫描。
 
 ## 使用方法
-* [使用视频](https://mp.weixin.qq.com/s/IntTPw4VpgaVzbZd1BZ8IQ)
+[使用视频](https://mp.weixin.qq.com/s/IntTPw4VpgaVzbZd1BZ8IQ)
 * 1.将项目fork到自己的github.
 * 2.修改流程文件（.github/workflows/incloud.yaml）里的 git config --local user.email  与   git config --global user.name  改成自己的邮箱与自己的ID（用于报告输出）。
 * 3.修改input目录的扫描目标，使用action标签进行在线编译。
@@ -24,12 +24,12 @@
 * ![-w784](img/inbug04.png)
 * ![-w784](img/inbug05.png)
 ## References
-* https://github.com/chaitin/xray
-* https://github.com/ffuf/ffuf
-* https://github.com/projectdiscovery/nuclei
-* https://github.com/projectdiscovery/naabu
-* https://github.com/projectdiscovery/nuclei
-* https://github.com/projectdiscovery/subfinder
+https://github.com/chaitin/xray
+https://github.com/ffuf/ffuf
+https://github.com/projectdiscovery/nuclei
+https://github.com/projectdiscovery/naabu
+https://github.com/projectdiscovery/nuclei
+https://github.com/projectdiscovery/subfinder
 
 **官网：**
 https://www.inbug.org
