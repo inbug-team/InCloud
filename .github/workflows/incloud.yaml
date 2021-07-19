@@ -1,0 +1,94 @@
+name: incloud
+
+on:
+    workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@master
+
+      - name: Setup golang
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.14
+
+      - name: Setup Dependencies
+        run: sudo apt-get install libpcap-dev 
+           
+        
+
+      - name: Cache Go
+        id: cache-go
+        uses: actions/cache@v2
+        with:
+          path: /home/runner/go
+          key: ${{ runner.os }}-go
+
+      - name: Setting up ProjectDiscovery tools
+        env:
+          GO111MODULE: on
+        run: |
+          go get -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder
+          go get -v github.com/projectdiscovery/dnsx/cmd/dnsx
+          go get -v github.com/projectdiscovery/naabu/v2/cmd/naabu
+          go get -v github.com/projectdiscovery/httpx/cmd/httpx
+          go get -v github.com/projectdiscovery/nuclei/v2/cmd/nuclei
+          go get -v github.com/projectdiscovery/mapcidr/cmd/mapcidr
+          go get -u github.com/ffuf/ffuf
+        shell: bash
+
+
+      - name: Running SubFinder for passive DNS enumeration
+        run: |
+          subfinder -dL input/domains.txt -config config/subfinder-config.yaml -o output/passive_subdomains.txt
+        shell: bash
+
+      - name: Running dnsx for valid DNS filtering 
+        run: |
+          dnsx -l output/passive_subdomains.txt -t 50 | tee output/active_subdomains.txt
+        shell: bash
+
+      - name: Running naabu to check top 1000 ports
+        run: |
+          naabu -iL output/active_subdomains.txt  -rate 10000 -top-ports 1000 | tee output/active_ports.txt
+        shell: bash
+
+
+      - name: Running httpx for HTTP webservers probbing
+        run: |
+          httpx -l output/active_ports.txt -title
+          httpx -l output/active_ports.txt | tee output/active_urls.txt
+        shell: bash
+      - name: Running dirscan 
+        run: |
+          wget https://raw.githubusercontent.com/maurosoria/dirsearch/master/db/dicc.txt
+          mkdir dirout
+          set +e; time for i in $(cat output/active_urls.txt );do ffuf -w dicc.txt -u $i/FUZZ -t 500 -mc 200 -ac -recursion -v -od dirout -of html; done
+          tar -czvf dirout.tar.gz dirout/
+          mv dirout.tar.gz output/dirout.tar.gz
+        shell: bash
+      
+
+      - name: Sorting the output results
+        run: |
+          find output -type f -exec sort {} -o {} \;
+        shell: bash
+
+      - name: Create local changes
+        run: |
+          git add output/active_ports.txt
+          git add output/active_urls.txt
+          git add output/dirout.tar.gz
+      - name: Commit results to Github
+        run: |
+          git config --local user.email "admin@inbug.org"
+          git config --global user.name "inbug-team"
+          git commit -m "InCloud Report" -a --allow-empty
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref }}
