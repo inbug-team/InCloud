@@ -24,12 +24,12 @@
 * ![-w784](img/inbug04.png)
 * ![-w784](img/inbug05.png)
 ## References
-https://github.com/chaitin/xray
-https://github.com/ffuf/ffuf
-https://github.com/projectdiscovery/nuclei
-https://github.com/projectdiscovery/naabu
-https://github.com/projectdiscovery/nuclei
-https://github.com/projectdiscovery/subfinder
+* https://github.com/chaitin/xray
+* https://github.com/ffuf/ffuf
+* https://github.com/projectdiscovery/nuclei
+* https://github.com/projectdiscovery/naabu
+* https://github.com/projectdiscovery/nuclei
+* https://github.com/projectdiscovery/subfinder
 
 **官网：**
 https://www.inbug.org
