@@ -22,6 +22,7 @@
 * ![-w784](img/inbug02.png)
 * ![-w784](img/inbug03.png)
 * ![-w784](img/inbug04.png)
+* ![-w784](img/inbug05.png)
 ## References
 * https://github.com/chaitin/xray
 * https://github.com/ffuf/ffuf
