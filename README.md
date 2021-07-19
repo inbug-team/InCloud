@@ -19,6 +19,9 @@
 * 3.修改input目录的扫描目标，使用action标签进行在线编译。
 * 4.GitHub提供六小时的容器使用时长，扫描结束后，扫描结果会自动上传到自己fork的output文件夹下。
 * ![-w784](img/inbug01.png)
+* ![-w784](img/inbug02.png)
+* ![-w784](img/inbug03.png)
+* ![-w784](img/inbug04.png)
 ## References
 * https://github.com/chaitin/xray
 * https://github.com/ffuf/ffuf
