@@ -1,0 +1,95 @@
+name: incloud
+
+on:
+    workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@master
+
+      - name: Setup golang
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.14
+
+      - name: Setup Dependencies
+        run: sudo apt-get install libpcap-dev 
+           
+        
+
+      - name: Cache Go
+        id: cache-go
+        uses: actions/cache@v2
+        with:
+          path: /home/runner/go
+          key: ${{ runner.os }}-go
+
+      - name: Setting up ProjectDiscovery tools
+        env:
+          GO111MODULE: on
+        run: |
+          go get -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder
+          go get -v github.com/projectdiscovery/dnsx/cmd/dnsx
+          go get -v github.com/projectdiscovery/naabu/v2/cmd/naabu
+          go get -v github.com/projectdiscovery/httpx/cmd/httpx
+          go get -v github.com/projectdiscovery/nuclei/v2/cmd/nuclei
+          go get -v github.com/projectdiscovery/mapcidr/cmd/mapcidr
+        shell: bash
+
+
+      - name: Running SubFinder for passive DNS enumeration
+        run: |
+          subfinder -dL input/domains.txt -config config/subfinder-config.yaml -o output/passive_subdomains.txt
+        shell: bash
+
+      - name: Running dnsx for valid DNS filtering 
+        run: |
+          dnsx -l output/passive_subdomains.txt -t 50 | tee output/active_subdomains.txt
+        shell: bash
+
+      - name: Running naabu to check top 1000 ports
+        run: |
+          naabu -iL output/active_subdomains.txt  -rate 10000 -top-ports 1000 | tee output/active_ports.txt
+        shell: bash
+
+
+      - name: Running httpx for HTTP webservers probbing
+        run: |
+          httpx -l output/active_ports.txt -title
+          httpx -l output/active_ports.txt | tee output/active_urls.txt
+        shell: bash
+
+      - name: Downloading Nuclei Templates
+        run: |
+          nuclei -update-templates
+        shell: bash
+
+
+
+      - name: Running Nuclei for vulnerability assessment
+        run: |
+          nuclei -t cves/ -l output/active_urls.txt -bs 100 -c 50 -rl 300 -nc | tee output/nuclei_output.txt
+        shell: bash
+
+      - name: Sorting the output results
+        run: |
+          find output -type f -exec sort {} -o {} \;
+        shell: bash
+
+      - name: Create local changes
+        run: |
+          git add output/active_ports.txt
+          git add output/active_urls.txt
+      - name: Commit results to Github
+        run: |
+          git config --local user.email "admin@inbug.org"
+          git config --global user.name "inbug-team"
+          git commit -m "InCloud Report" -a --allow-empty
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref }}
