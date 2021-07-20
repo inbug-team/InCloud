@@ -82,6 +82,7 @@ jobs:
           git add output/active_ports.txt
           git add output/active_urls.txt
           git add output/xraylog.tar.gz
+          git add output/dirout.tar.gz
       - name: Commit results to Github
         run: |
           git config --local user.email "admin@inbug.org"
