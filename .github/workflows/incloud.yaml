@@ -58,7 +58,7 @@ jobs:
         run: |
           wget https://raw.githubusercontent.com/maurosoria/dirsearch/master/db/dicc.txt
           mkdir dirout
-          set +e ;time for i in $(cat output/active_urls.txt );do ffuf -w dicc.txt -u $i/FUZZ -t 500 -mc 200 -ac -recursion -v -od dirout -of html; done
+          set +e ;time for i in $(cat output/active_urls.txt );do ffuf -w dicc.txt -u $i/FUZZ -t 500 -mc 200 -ac -recursion -v -of html -o dirout/`date +%Y%m%d%H%M%S`.html; done
           tar -czvf dirout.tar.gz dirout/
           mv dirout.tar.gz output/dirout.tar.gz
         shell: bash
