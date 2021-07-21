@@ -31,6 +31,9 @@
 * https://github.com/projectdiscovery/nuclei
 * https://github.com/projectdiscovery/subfinder
 
+## 最近更新
+[+] 2021/7/20 添加各分支输入备注，修复小bug。
+
 **官网：**
 https://www.inbug.org
 
