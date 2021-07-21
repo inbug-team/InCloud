@@ -65,10 +65,9 @@ jobs:
       - name: Running dirscan 
         run: |
           wget https://raw.githubusercontent.com/maurosoria/dirsearch/master/db/dicc.txt
-          mkdir dirout
-          set +e ;time for i in $(cat output/active_urls.txt );do ffuf -w dicc.txt -u $i/FUZZ -t 500 -mc 200 -ac -recursion -v -of html -o dirout/`date +%Y%m%d%H%M%S`.html; done
-          tar -czvf dirout.tar.gz dirout/
-          mv dirout.tar.gz output/dirout.tar.gz
+          pip3 install dirsearch
+          set +e; time for i in $(cat output/active_urls.txt );do dirsearch -u $i -e php,jsp,asp -i 200 --full-url -q | awk '{print $5}' >> dirout.txt |tail -f dirout.txt ; done
+          mv dirout.txt output/dirout.txt
         shell: bash
 
         
@@ -82,7 +81,7 @@ jobs:
           git add output/active_ports.txt
           git add output/active_urls.txt
           git add output/xraylog.tar.gz
-          git add output/dirout.tar.gz
+          git add output/dirout.txt
       - name: Commit results to Github
         run: |
           git config --local user.email "admin@inbug.org"
