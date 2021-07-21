@@ -74,8 +74,8 @@ jobs:
           git add output/xraylog.tar.gz
       - name: Commit results to Github
         run: |
-          git config --local user.email "admin@inbug.org"
-          git config --global user.name "inbug-team"
+          git config --local user.email "bake0323@gmail.com"
+          git config --global user.name "bakel1"
           git commit -m "InCloud Report" -a --allow-empty
       - name: Push changes
         uses: ad-m/github-push-action@master
