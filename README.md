@@ -19,7 +19,7 @@
 * 2.修改流程文件（.github/workflows/incloud.yaml）里的 git config --local user.email  与   git config --global user.name  改成自己的邮箱与自己的ID（用于报告输出）。
 * 3.修改input目录的扫描目标，使用action标签进行在线编译。
 * 4.GitHub提供六小时的容器使用时长，扫描结束后，扫描结果会自动上传到自己fork的output文件夹下。
-* 5.要更新最新版本，请取消fork再重新fork此项目。
+* 5.需要更新最新版本，请删除fork的项目再重新fork此项目。
 * ![-w784](img/inbug01.png)
 * ![-w784](img/inbug03.png)
 * ![-w784](img/inbug04.png)
