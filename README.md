@@ -33,8 +33,8 @@
 * https://github.com/projectdiscovery/subfinder
 
 ## 最近更新
-[+] 2021/7/20 添加各分支输入备注，修复小bug。
-[+] 2021/7/21 使用dirsearch替换ffuf,fuff容易把站扫挂，添加新的Webcrack分支。
+* [+] 2021/7/20 添加各分支输入备注，修复小bug。
+* [+] 2021/7/21 使用dirsearch替换ffuf,fuff容易把站扫挂，添加新的Webcrack分支。
 
 
 
