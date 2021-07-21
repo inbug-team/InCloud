@@ -64,7 +64,6 @@ jobs:
         
       - name: Running dirscan 
         run: |
-          wget https://raw.githubusercontent.com/maurosoria/dirsearch/master/db/dicc.txt
           pip3 install dirsearch
           set +e; time for i in $(cat output/active_urls.txt );do dirsearch -u $i -e php,jsp,asp -i 200 --full-url -q | awk '{print $5}' >> dirout.txt |tail -f dirout.txt ; done
           mv dirout.txt output/dirout.txt
