@@ -61,6 +61,18 @@ jobs:
           set +e ;time for i in $(cat output/active_urls.txt );do ffuf -w dicc.txt -u $i/FUZZ -t 200 -mc 200 -ac -recursion -v -of csv -o dirout/`date +%Y%m%d%H%M%S`.csv; done
           cat dirout/*.csv >> output/dirout.csv
         shell: bash
+          
+      - name: Runing Webcrack
+        run: |
+          wget https://github.com/yzddmr6/WebCrack/archive/refs/heads/master.zip
+          unzip master.zip
+          cd WebCrack-master
+          pip3 install -r requirements.txt
+          cat ../output/dirout.csv | awk -F "," '{print $2}' | sed 's/url//g' | sed '/^\s*$/d' >> weburl.txt
+          echo weburl.txt | python3 webcrack.py >> webcrack.txt
+          cp webcrack.txt ../output/webcrack.txt
+        shell: bash  
+
 
       - name: Sorting the output results
         run: |
