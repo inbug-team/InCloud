@@ -33,6 +33,7 @@
 * https://github.com/projectdiscovery/naabu
 * https://github.com/projectdiscovery/nuclei
 * https://github.com/projectdiscovery/subfinder
+* https://github.com/yzddmr6/WebCrack
 
 ## 最近更新
 * [+] 2021/7/20 添加各分支输入备注，修复小bug。
