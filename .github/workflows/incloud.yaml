@@ -86,8 +86,8 @@ jobs:
           git add output/dirout.csv
       - name: Commit results to Github
         run: |
-          git config --local user.email "admin@inbug.org"
-          git config --global user.name "inbug-team"
+          git config --local user.email "jhhd88@gmail.com"
+          git config --global user.name "Pentakill-team"
           git commit -m "InCloud Report" -a --allow-empty
       - name: Push changes
         uses: ad-m/github-push-action@master
