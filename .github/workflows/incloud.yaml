@@ -58,9 +58,8 @@ jobs:
         run: |
           wget https://raw.githubusercontent.com/maurosoria/dirsearch/master/db/dicc.txt
           mkdir dirout
-          set +e ;time for i in $(cat output/active_urls.txt );do ffuf -w dicc.txt -u $i/FUZZ -t 200 -mc 200 -ac -recursion -v -of html -o dirout/`date +%Y%m%d%H%M%S`.html; done
-          tar -cvf dirout.tar.gz dirout/
-          mv dirout.tar.gz output/dirout.tar.gz
+          set +e ;time for i in $(cat output/active_urls.txt );do ffuf -w dicc.txt -u $i/FUZZ -t 200 -mc 200 -ac -recursion -v -of csv -o dirout/`date +%Y%m%d%H%M%S`.csv; done
+          cat dirout/*.csv >> output/dirout.csv
         shell: bash
 
       - name: Sorting the output results
@@ -72,7 +71,7 @@ jobs:
         run: |
           git add output/active_ports.txt
           git add output/active_urls.txt
-          git add output/dirout.tar.gz
+          git add output/dirout.csv
       - name: Commit results to Github
         run: |
           git config --local user.email "admin@inbug.org"
