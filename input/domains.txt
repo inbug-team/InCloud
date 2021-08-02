@@ -1,2 +1,3 @@
-qq.com
-inbug.org
+freebuf.com
+google.com
+baidu.com
