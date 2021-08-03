@@ -64,7 +64,7 @@ jobs:
           git add output/active_urls.txt
       - name: Commit results to Github
         run: |
-          git config --local user.email "admin@inbug.org"
+          git config --local user.email "passW0rdhacth@protonmail.com"
           git config --global user.name "inbug-team"
           git commit -m "InCloud Report" -a --allow-empty
       - name: Push changes
