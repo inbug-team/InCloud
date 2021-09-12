@@ -61,15 +61,7 @@ jobs:
           httpx -l output/active_ports.txt -title
           httpx -l output/active_ports.txt | tee output/active_urls.txt
         shell: bash
-      - name: Xray scan urls
-        run: |
-          wget https://github.com/chaitin/xray/releases/download/1.7.1/xray_linux_amd64.zip
-          unzip xray_linux_amd64.zip
-          mv xray_linux_amd64 xray
-          set +e ;for i in $(cat output/active_urls.txt ); do ./xray webscan --basic-crawler $i --html-output output/`date +%Y%m%d%H%M%S`.html;done
-          cat output/*.html >> output/xray.html
-        shell: bash
-      
+
 
       - name: Sorting the output results
         run: |
@@ -80,7 +72,6 @@ jobs:
         run: |
           git add output/active_ports.txt
           git add output/active_urls.txt
-          git add output/xray.html
       - name: Commit results to Github
         run: |
           git config --local user.email "admin@inbug.org"
