@@ -16,7 +16,7 @@ jobs:
           go-version: 1.14
 
       - name: Setup Dependencies
-        run: sudo apt-get install libpcap-dev 
+        run: sudo apt-get install libpcap-dev git python3-pip
            
         
 
@@ -37,22 +37,15 @@ jobs:
           go get -v github.com/projectdiscovery/httpx/cmd/httpx
           go get -v github.com/projectdiscovery/nuclei/v2/cmd/nuclei
           go get -v github.com/projectdiscovery/mapcidr/cmd/mapcidr
+          go get -u github.com/ffuf/ffuf
+          go get -v github.com/EdgeSecurityTeam/EHole
         shell: bash
 
-
-      - name: Running SubFinder for passive DNS enumeration
-        run: |
-          subfinder -dL input/domains.txt -config config/subfinder-config.yaml -o output/passive_subdomains.txt
-        shell: bash
-
-      - name: Running dnsx for valid DNS filtering 
-        run: |
-          dnsx -l output/passive_subdomains.txt -t 50 | tee output/active_subdomains.txt
-        shell: bash
 
       - name: Running naabu to check top 1000 ports
         run: |
-          naabu -iL output/active_subdomains.txt  -rate 10000 -top-ports 1000 | tee output/active_ports.txt
+          mapcidr -l input/target.txt -silent > input/cidr.txt
+          naabu -iL input/cidr.txt  -rate 10000 -top-ports 1000 | tee output/active_ports.txt
         shell: bash
 
 
@@ -61,18 +54,20 @@ jobs:
           httpx -l output/active_ports.txt -title
           httpx -l output/active_ports.txt | tee output/active_urls.txt
         shell: bash
-
-      - name: Downloading Nuclei Templates
+        
+      - name: Running dirscan 
         run: |
-          nuclei -update-templates
+          wget https://raw.githubusercontent.com/maurosoria/dirsearch/master/db/dicc.txt
+          mkdir dirout
+          set +e ;time for i in $(cat output/active_urls.txt );do ffuf -w dicc.txt -u $i/FUZZ -t 200 -mc 200 -ac -recursion -v -of csv -o dirout/`date +%Y%m%d%H%M%S`.csv; done
+          cat dirout/*.csv >> output/dirout.csv
         shell: bash
-
-
-
-      - name: Running Nuclei for vulnerability assessment
+          
+      - name: Runing FingerPrint
         run: |
-          nuclei -t cves/ -l output/active_urls.txt -bs 100 -c 50 -rl 300 -nc | tee output/nuclei_output.txt
-        shell: bash
+          Ehol -l output/active_urls.txt -json output/active_fingerprint.txt
+        shell: bash  
+
 
       - name: Sorting the output results
         run: |
@@ -83,10 +78,12 @@ jobs:
         run: |
           git add output/active_ports.txt
           git add output/active_urls.txt
+          git add output/dirout.csv
+          git add output/active_fingerprint.txt
       - name: Commit results to Github
         run: |
-          git config --local user.email "admin@inbug.org"
-          git config --global user.name "inbug-team"
+          git config --local user.email "guiyingchongchong@qq.com"
+          git config --global user.name "sharp-shooter"
           git commit -m "InCloud Report" -a --allow-empty
       - name: Push changes
         uses: ad-m/github-push-action@master
