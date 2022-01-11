@@ -38,7 +38,6 @@ jobs:
           go get -v github.com/projectdiscovery/nuclei/v2/cmd/nuclei
           go get -v github.com/projectdiscovery/mapcidr/cmd/mapcidr
           go get -u github.com/ffuf/ffuf
-          go get -v github.com/edgesecurityteam/ehole
         shell: bash
 
 
@@ -65,7 +64,11 @@ jobs:
           
       - name: Runing FingerPrint
         run: |
-          ehol -l output/active_urls.txt -json output/active_fingerprint.txt
+          wget https://github.com/EdgeSecurityTeam/EHole/releases/download/3.0/Ehole3.0-linux.zip
+          unzip Ehole3.0-linux.zip
+          cd Ehole3.0-linux
+          ./Ehole3.0-linux -l output/active_urls.txt -json ../output/active_fingerprint.txt
+          cd ../
         shell: bash  
 
 
