@@ -38,7 +38,7 @@ jobs:
           go get -v github.com/projectdiscovery/nuclei/v2/cmd/nuclei
           go get -v github.com/projectdiscovery/mapcidr/cmd/mapcidr
           go get -u github.com/ffuf/ffuf
-          go get -v github.com/EdgeSecurityTeam/EHole
+          go get -v github.com/EdgeSecurityTeam/ehole
         shell: bash
 
 
@@ -65,7 +65,7 @@ jobs:
           
       - name: Runing FingerPrint
         run: |
-          Ehol -l output/active_urls.txt -json output/active_fingerprint.txt
+          ehol -l output/active_urls.txt -json output/active_fingerprint.txt
         shell: bash  
 
 
