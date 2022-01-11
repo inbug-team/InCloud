@@ -44,14 +44,14 @@ jobs:
       - name: Running naabu to check top 1000 ports
         run: |
           mapcidr -l input/target.txt -silent > input/cidr.txt
-          #naabu -l input/cidr.txt  -rate 10000 -top-ports 1000 | tee output/active_ports.txt
+          # naabu -l input/cidr.txt  -rate 10000 -top-ports 1000 | tee output/active_ports.txt
           naabu -l input/cidr.txt  -rate 10000 -p - | tee output/active_ports.txt
         shell: bash
 
 
       - name: Running httpx for HTTP webservers probbing
         run: |
-          #httpx -l output/active_ports.txt -title
+          # httpx -l output/active_ports.txt -title
           httpx -l output/active_ports.txt | tee output/active_urls.txt
         shell: bash
         
@@ -80,7 +80,7 @@ jobs:
         run: |
           git add output/active_ports.txt
           git add output/active_urls.txt
-          #git add output/dirout.csv
+          # git add output/dirout.csv
           git add output/active_fingerprint.txt
       - name: Commit results to Github
         run: |
