@@ -58,6 +58,7 @@ jobs:
         run: |
           wget https://github.com/EdgeSecurityTeam/EHole/releases/download/3.0/Ehole3.0-linux.zip
           unzip Ehole3.0-linux.zip
+          chmod +x Ehole3.0-linux
           ./Ehole3.0-linux -l output/active_urls.txt -json output/active_fingerprint.txt
         shell: bash  
         
