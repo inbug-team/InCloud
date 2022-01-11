@@ -54,6 +54,13 @@ jobs:
           httpx -l output/active_ports.txt | tee output/active_urls.txt
         shell: bash
         
+      - name: Runing FingerPrint
+        run: |
+          wget https://github.com/EdgeSecurityTeam/EHole/releases/download/3.0/Ehole3.0-linux.zip
+          unzip Ehole3.0-linux.zip
+          ./Ehole3.0-linux -l output/active_urls.txt -json output/active_fingerprint.txt
+        shell: bash  
+        
       - name: Running dirscan 
         run: |
           wget https://raw.githubusercontent.com/maurosoria/dirsearch/master/db/dicc.txt
@@ -61,16 +68,6 @@ jobs:
           set +e ;time for i in $(cat output/active_urls.txt );do ffuf -w dicc.txt -u $i/FUZZ -t 200 -mc 200 -ac -recursion -v -of csv -o dirout/`date +%Y%m%d%H%M%S`.csv; done
           cat dirout/*.csv >> output/dirout.csv
         shell: bash
-          
-      - name: Runing FingerPrint
-        run: |
-          wget https://github.com/EdgeSecurityTeam/EHole/releases/download/3.0/Ehole3.0-linux.zip
-          unzip Ehole3.0-linux.zip
-          cd Ehole3.0-linux
-          ./Ehole3.0-linux -l output/active_urls.txt -json ../output/active_fingerprint.txt
-          cd ../
-        shell: bash  
-
 
       - name: Sorting the output results
         run: |
